@@ -60,7 +60,7 @@ def enable_wallet(request: Request):
                 "data": wallet
             }
         )
-    except WalletAlreadyEnabledError:
+    except WalletEnabledError:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
             content={
@@ -105,7 +105,7 @@ def disable_wallet(request: Request):
                 "data": wallet
             }
         )
-    except WalletAlreadyDisabledError:
+    except WalletDisabledError:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
             content={

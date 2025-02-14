@@ -11,8 +11,13 @@ class Transaction(Base):
     amount = DecimalField()
     created_at = TimestampField(default=datetime.datetime.now().timestamp())
     status = TextField() # refer to TransactionStatus enum
+    type = TextField()
 
 class TransactionStatus(Enum):
     PENDING = "pending"
     SUCCESS = "success"
     FAILED = "failed"
+
+class TransactionType(Enum):
+    WITHDRAW = "withdraw"
+    DEPOSIT = "deposit"

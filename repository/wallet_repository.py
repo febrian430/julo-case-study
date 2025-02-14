@@ -1,7 +1,7 @@
 from models.wallet import Wallet
 from uuid import uuid4
 from datetime import datetime
-from common.exceptions import WalletAlreadyEnabledError
+from common.exceptions import WalletEnabledError
 
 class WalletRepository:
     def create_wallet(self, customer_id: str) -> str:
