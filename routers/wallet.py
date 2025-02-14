@@ -137,7 +137,7 @@ def disable_wallet(request: Request):
             }
         )
         
-@private_router.post("/wallet/deposits", dependencies=[Depends(parse_user_from_token)])
+@private_router.post("/wallet/withdrawals", dependencies=[Depends(parse_user_from_token)])
 def deposit(
         request: Request, 
         amount: int = Form(0),
@@ -147,7 +147,7 @@ def deposit(
     # TODO: add validation
     
     try:
-        resp = service.deposit(request.state.wallet_id, request.state.customer_id, amount, reference_id)
+        resp = service.withdraw(request.state.wallet_id, request.state.customer_id, amount, reference_id)
        
         return JSONResponse(
             status_code=status.HTTP_200_OK,

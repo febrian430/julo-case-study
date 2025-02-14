@@ -56,3 +56,25 @@ class WalletService:
         
         return dtos.convert_transaction_model_to_wallet_deposit_response(transaction, customer_id)
         
+    def withdraw(self, wallet_id: str, customer_id: str, amount: int, reference_id: str) -> dtos.WalletDepositResponse:
+        wallet = self.repository.find_wallet_by_id(wallet_id, need_balance=True)
+        
+        transaction_type  = TransactionType.WITHDRAW
+        status = TransactionStatus.SUCCESS
+        
+        if wallet is None:
+            raise WalletNotFoundError
+        elif wallet.disabled_at is not None or wallet.balance < amount:
+            status = TransactionStatus.FAILED
+        
+        transaction = self.repository.find_transaction_by_reference_id(reference_id)
+        if transaction != None:
+            raise DuplicateTransactionReferenceId
+        
+        transaction = self.repository.put_transaction(wallet_id, transaction_type, amount, status, reference_id)
+        
+        if wallet.disabled_at is not None:
+            raise WalletDisabledError
+        
+        return dtos.convert_transaction_model_to_wallet_deposit_response(transaction, customer_id)
+        

@@ -93,3 +93,34 @@ def convert_transaction_model_to_wallet_deposit_response(model: Transaction | No
     
     resp_data = WalletDepositResponseData(str(model.id), customer_id, model.status, time.convert_timestamp_to_iso_format(model.created_at), model.amount, model.reference_id)
     return asdict(WalletDepositResponse(resp_data))
+
+@dataclass
+class WalletWithdrawResponseData:
+    def __init__(self, id: str, withdrawn_by: str, status: str, withdrawn_at: str, amount: int, reference_id: str):
+        self.id = id
+        self.withdrawn_by = withdrawn_by
+        self.status = status
+        self.withdrawn_at = withdrawn_at
+        self.amount = amount
+        self.reference_id = reference_id
+
+    id: str
+    withdrawn_by: str
+    status: str
+    withdrawn_at: str
+    amount: int
+    reference_id: str
+
+@dataclass
+class WalletWithdrawResponse:
+    wallet: WalletWithdrawResponseData
+    
+    def __init__(self, data: WalletWithdrawResponseData):
+        self.wallet = data
+    
+def convert_transaction_model_to_wallet_withdraw_response(model: Transaction | None, customer_id: str) -> dict[str, any] | None:
+    if model is None:
+        return None
+    
+    resp_data = WalletWithdrawResponseData(str(model.id), customer_id, model.status, time.convert_timestamp_to_iso_format(model.created_at), model.amount, model.reference_id)
+    return asdict(WalletWithdrawResponse(resp_data))
