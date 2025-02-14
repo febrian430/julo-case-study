@@ -1,15 +1,16 @@
 from peewee import *
-import models.wallet
+from models.wallet import Wallet
+from models.base import Base
 from enum import Enum
 import datetime
 
-class Transaction(Model):
-    id = CharField()
-    reference_id = CharField()
-    wallet_id = ForeignKeyField(models.wallet, backref="transactions")
+class Transaction(Base):
+    id = TextField(primary_key=True)
+    reference_id = TextField(unique=True)
+    wallet_id = ForeignKeyField(Wallet, to_field=Wallet.id)
     amount = DecimalField()
-    created_at = TimestampField(default=datetime.datetime.timestamp())
-    status = CharField() # refer to TransactionStatus enum
+    created_at = TimestampField(default=datetime.datetime.now().timestamp())
+    status = TextField() # refer to TransactionStatus enum
 
 class TransactionStatus(Enum):
     PENDING = "pending"
