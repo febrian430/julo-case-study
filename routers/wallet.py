@@ -6,6 +6,7 @@ from service.wallet_service import WalletService
 from service.auth_service import AuthService
 from logger import logger
 from middleware.auth import parse_user_from_token
+from common.exceptions import *
 
 router = APIRouter(
     prefix="/api/v1"
@@ -49,6 +50,47 @@ def init_wallet(customer_xid: str|None = Form("")):
 
 @private_router.post("/wallet", dependencies=[Depends(parse_user_from_token)])
 def enable_wallet(request: Request):
-    print(request.state.wallet_id)
-    return {"ping": "pong"}
+    try:
+        wallet = service.enable_wallet(request.state.wallet_id)
+       
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "status": "success",
+                "data": wallet
+            }
+        )
+    except WalletAlreadyEnabledError:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "status": "fail",
+                "data": {
+                    "error": "Already enabled"
+                }
+            }
+        )
+    except WalletNotFoundError:
+         return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={
+                "status": "fail",
+                "data": {
+                    "error": "wallet not found"
+                }
+            }
+        )
+    except Exception as e:
+        logger.error(f'unexpected error: {e}')
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "status": "fail",
+                "data": {
+                    "error": "unknown error"
+                }
+            }
+        )
+        
+    
     
