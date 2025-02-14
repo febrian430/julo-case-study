@@ -1,14 +1,20 @@
 from typing import Annotated
-from fastapi import APIRouter, Form, status
+from fastapi import APIRouter, Form, status, Request, Depends
 from fastapi.responses import JSONResponse
 from repository.wallet_repository import WalletRepository
 from service.wallet_service import WalletService
 from service.auth_service import AuthService
 from logger import logger
+from middleware.auth import parse_user_from_token
 
 router = APIRouter(
     prefix="/api/v1"
 )
+
+private_router = APIRouter(
+    prefix="/api/v1"
+)
+
 
 repo = WalletRepository()
 service = WalletService(repo)
@@ -40,5 +46,9 @@ def init_wallet(customer_xid: str|None = Form("")):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
             content={"status":"fail"}
         )
-    
+
+@private_router.post("/wallet", dependencies=[Depends(parse_user_from_token)])
+def enable_wallet(request: Request):
+    print(request.state.wallet_id)
+    return {"ping": "pong"}
     
