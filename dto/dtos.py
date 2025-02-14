@@ -1,6 +1,6 @@
 from models.wallet import Wallet
+from models.transaction import *
 from dataclasses import asdict, dataclass
-import json
 from common import time
 
 @dataclass
@@ -61,3 +61,35 @@ def convert_model_to_disable_wallet_response(model: Wallet | None) -> dict[str, 
     
     wallet_data = DisableWalletResponseData(model.id, model.customer_id, "enabled" if model.enabled_at is not None else "disabled", time.convert_timestamp_to_iso_format(model.disabled_at), model.balance)
     return asdict(DisableWalletResponse(wallet_data))
+
+
+@dataclass
+class WalletDepositResponseData:
+    def __init__(self, id: str, deposited_by: str, status: str, deposited_at: str, amount: int, reference_id: str):
+        self.id = id
+        self.deposited_by = deposited_by
+        self.status = status
+        self.deposited_at = deposited_at
+        self.amount = amount
+        self.reference_id = reference_id
+
+    id: str
+    deposited_by: str
+    status: str
+    deposited_at: str
+    amount: int
+    reference_id: str
+
+@dataclass
+class WalletDepositResponse:
+    wallet: WalletDepositResponseData
+    
+    def __init__(self, data: WalletDepositResponseData):
+        self.wallet = data
+    
+def convert_transaction_model_to_wallet_deposit_response(model: Transaction | None, customer_id: str) -> dict[str, any] | None:
+    if model is None:
+        return None
+    
+    resp_data = WalletDepositResponseData(str(model.id), customer_id, model.status, time.convert_timestamp_to_iso_format(model.created_at), model.amount, model.reference_id)
+    return asdict(WalletDepositResponse(resp_data))

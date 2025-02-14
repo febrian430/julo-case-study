@@ -9,3 +9,8 @@ class WalletEnabledError(Exception):
 class WalletDisabledError(Exception):
     def __init__(self):
         super().__init__("wallet is already disabled")
+        
+class DuplicateTransactionReferenceId(Exception):
+    def __init__(self):
+        super().__init__("transaction with reference id already exists")
+        

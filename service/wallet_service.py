@@ -2,6 +2,7 @@ from repository.wallet_repository import WalletRepository
 from common.exceptions import *
 from models.wallet import *
 from dto import dtos
+from models.transaction import *
 
 
 class WalletService:
@@ -33,9 +34,25 @@ class WalletService:
         wallet = self.repository.disable_wallet(wallet)
         return dtos.convert_model_to_disable_wallet_response(wallet)
 
-    def deposit(self, wallet_id: str, amount: int, reference_id: str):
+    def deposit(self, wallet_id: str, customer_id: str, amount: int, reference_id: str) -> dtos.WalletDepositResponse:
         wallet = self.repository.find_wallet_by_id(wallet_id)
+        
+        transaction_type  = TransactionType.DEPOSIT
+        status = TransactionStatus.SUCCESS
+        
         if wallet is None:
             raise WalletNotFoundError
         elif wallet.disabled_at is not None:
+            status = TransactionStatus.FAILED
+        
+        transaction = self.repository.find_transaction_by_reference_id(reference_id)
+        if transaction != None:
+            raise DuplicateTransactionReferenceId
+        
+        transaction = self.repository.put_transaction(wallet_id, transaction_type, amount, status, reference_id)
+        
+        if wallet.disabled_at is not None:
             raise WalletDisabledError
+        
+        return dtos.convert_transaction_model_to_wallet_deposit_response(transaction, customer_id)
+        

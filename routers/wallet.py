@@ -137,5 +137,64 @@ def disable_wallet(request: Request):
             }
         )
         
+@private_router.post("/wallet/deposits", dependencies=[Depends(parse_user_from_token)])
+def deposit(
+        request: Request, 
+        amount: int = Form(0),
+        reference_id: str = Form("")
+    ):
     
+    # TODO: add validation
     
+    try:
+        resp = service.deposit(request.state.wallet_id, request.state.customer_id, amount, reference_id)
+       
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "status": "success",
+                "data": resp
+            }
+        )
+    except WalletDisabledError:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "status": "fail",
+                "data": {
+                    "error": "Wallet is disabled"
+                }
+            }
+        )
+    except WalletNotFoundError:
+         return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={
+                "status": "fail",
+                "data": {
+                    "error": "wallet not found"
+                }
+            }
+        )
+    except DuplicateTransactionReferenceId:
+         return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "status": "fail",
+                "data": {
+                    "error": "reference id already exists"
+                }
+            }
+        )
+    except Exception as e:
+        logger.error(f'unexpected error: {e}')
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "status": "fail",
+                "data": {
+                    "error": "unknown error"
+                }
+            }
+        )
+        
