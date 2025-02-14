@@ -25,3 +25,10 @@ class WalletRepository:
         wallet.disabled_at = None
         wallet.save()
         return wallet
+    
+    def disable_wallet(self, wallet: Wallet) -> Wallet:
+        now = datetime.now().timestamp()
+        wallet.disabled_at = now
+        wallet.enabled_at = None
+        wallet.save()
+        return wallet

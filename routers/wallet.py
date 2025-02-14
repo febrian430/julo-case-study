@@ -93,4 +93,49 @@ def enable_wallet(request: Request):
         )
         
     
+@private_router.patch("/wallet", dependencies=[Depends(parse_user_from_token)])
+def disable_wallet(request: Request):
+    try:
+        wallet = service.disable_wallet(request.state.wallet_id)
+       
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "status": "success",
+                "data": wallet
+            }
+        )
+    except WalletAlreadyDisabledError:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "status": "fail",
+                "data": {
+                    "error": "Already disabled"
+                }
+            }
+        )
+    except WalletNotFoundError:
+         return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={
+                "status": "fail",
+                "data": {
+                    "error": "wallet not found"
+                }
+            }
+        )
+    except Exception as e:
+        logger.error(f'unexpected error: {e}')
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "status": "fail",
+                "data": {
+                    "error": "unknown error"
+                }
+            }
+        )
+        
+    
     

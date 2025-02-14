@@ -5,3 +5,7 @@ class WalletNotFoundError(Exception):
 class WalletAlreadyEnabledError(Exception):
     def __init__(self):
         super().__init__("wallet is already enabled")
+
+class WalletAlreadyDisabledError(Exception):
+    def __init__(self):
+        super().__init__("wallet is already disabled")

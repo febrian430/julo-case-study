@@ -23,3 +23,12 @@ class WalletService:
         wallet = self.repository.enable_wallet(wallet)
         return dtos.convert_model_to_enable_wallet_response(wallet)
 
+    def disable_wallet(self, wallet_id: str) -> dtos.DisableWalletResponse:
+        wallet = self.repository.find_wallet_by_id(wallet_id)
+        if wallet is None:
+            raise WalletNotFoundError
+        elif wallet.disabled_at is not None:
+            raise WalletAlreadyDisabledError
+        
+        wallet = self.repository.disable_wallet(wallet)
+        return dtos.convert_model_to_disable_wallet_response(wallet)
