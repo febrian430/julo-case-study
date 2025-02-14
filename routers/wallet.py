@@ -29,7 +29,9 @@ def init_wallet(customer_xid: str|None = Form("")):
         return {"status": "success"}
     except Exception as e:
         logger.error(e)
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        return {"status":"fail"}
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            content={"status":"fail"}
+        )
     
     
