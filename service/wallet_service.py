@@ -6,5 +6,6 @@ class WalletService:
     def __init__(self, repository: WalletRepository):
         self.repository = repository
 
-    def create_wallet(self, customer_id: str):
-        self.repository.create_wallet(customer_id)
+    def create_wallet(self, customer_id: str) -> str:
+        return self.repository.create_wallet(customer_id)
+

@@ -3,6 +3,7 @@ from fastapi import APIRouter, Form, status
 from fastapi.responses import JSONResponse
 from repository.wallet_repository import WalletRepository
 from service.wallet_service import WalletService
+from service.auth_service import AuthService
 from logger import logger
 
 router = APIRouter(
@@ -11,6 +12,7 @@ router = APIRouter(
 
 repo = WalletRepository()
 service = WalletService(repo)
+authService = AuthService()
 
 @router.post("/init")
 def init_wallet(customer_xid: str|None = Form("")):
@@ -25,8 +27,13 @@ def init_wallet(customer_xid: str|None = Form("")):
             }
         )
     try:
-        service.create_wallet(customer_xid)
-        return {"status": "success"}
+        wallet_id = service.create_wallet(customer_xid)
+        token = authService.generate_jwt_token(customer_xid, wallet_id)
+
+        return JSONResponse(
+            status_code=status.HTTP_201_CREATED,
+            content={"status": "success", "data": {"token": token}}
+        )
     except Exception as e:
         logger.error(e)
         return JSONResponse(
