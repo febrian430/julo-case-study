@@ -20,11 +20,11 @@ class WalletRepository:
     def find_wallet_by_id(self, wallet_id: str, need_balance: bool = False) -> Wallet:
         wallet = Wallet.get_by_id(wallet_id)
         
-        if need_balance:
+        if need_balance:    
             result = Transaction.select(
                 fn.SUM(Case(None, [(Transaction.type == 'deposit', Transaction.amount)], 0)).alias('sum_deposits'),
                 fn.SUM(Case(None, [(Transaction.type == 'withdraw', Transaction.amount)], 0)).alias('sum_withdrawals')
-            ).where(Transaction.status == TransactionStatus.SUCCESS.value).dicts().get()
+            ).where((Transaction.status == TransactionStatus.SUCCESS.value) & (Transaction.wallet_id == wallet_id)).dicts().get()
             
             wallet.balance = (result['sum_deposits'] or 0) - (result['sum_withdrawals'] or 0)
             
