@@ -6,6 +6,7 @@ from service.auth_service import AuthService
 from logger import logger
 from middleware.auth import parse_user_from_token
 from common.exceptions import *
+from routers.validations import validate_init_wallet
 
 router = APIRouter(
     prefix="/api/v1"
@@ -22,17 +23,10 @@ authService = AuthService()
 
 @router.post("/init")
 def init_wallet(customer_xid: str|None = Form("")):
-    if len(customer_xid) == 0:
-        return error_response(
-            status_code=status.HTTP_400_BAD_REQUEST, 
-            content={
-                "status": "fail", 
-                "data": {
-                    "customer_xid": ["Missing data for required field."]
-                }
-            }
-        )
+    
     try:
+        validate_init_wallet(customer_xid)
+        
         wallet_id = service.create_wallet(customer_xid)
         token = authService.generate_jwt_token(customer_xid, wallet_id)
 
@@ -40,6 +34,8 @@ def init_wallet(customer_xid: str|None = Form("")):
             status_code=status.HTTP_201_CREATED,
             content={"token": token}
         )
+    except ValidationError as ve:
+        return validation_error(ve)
     except Exception as e:
         logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
         return internal_server_error_response(e)
@@ -56,12 +52,12 @@ def enable_wallet(request: Request):
     except WalletEnabledError:
         return error_response(
             status_code=status.HTTP_400_BAD_REQUEST,
-            error_msg="Already enabled"
+            error="Already enabled"
         )
     except WalletNotFoundError:
          return error_response(
             status_code=status.HTTP_404_NOT_FOUND,
-            error_msg="wallet not found"
+            error="wallet not found"
         )
     except Exception as e:
         logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
@@ -80,12 +76,12 @@ def disable_wallet(request: Request):
     except WalletDisabledError:
         return error_response(
             status_code=status.HTTP_400_BAD_REQUEST,
-            error_msg="Already disabled"
+            error="Already disabled"
         )
     except WalletNotFoundError:
          return error_response(
             status_code=status.HTTP_404_NOT_FOUND,
-            error_msg="wallet not found"
+            error="wallet not found"
         )
     except Exception as e:
         logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
@@ -110,17 +106,17 @@ def deposit(
     except WalletDisabledError:
         return error_response(
             status_code=status.HTTP_400_BAD_REQUEST,
-            error_msg="Wallet is disabled"
+            error="Wallet is disabled"
         )
     except WalletNotFoundError:
          return error_response(
             status_code=status.HTTP_404_NOT_FOUND,
-            error_msg="wallet not found"
+            error="wallet not found"
         )
     except DuplicateTransactionReferenceId:
          return error_response(
             status_code=status.HTTP_400_BAD_REQUEST,
-            error_msg="reference id already exists"
+            error="reference id already exists"
         )
     except Exception as e:
         logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
@@ -146,17 +142,17 @@ def withdraw(
     except WalletDisabledError:
         return error_response(
             status_code=status.HTTP_400_BAD_REQUEST,
-            error_msg="Wallet is disabled"
+            error="Wallet is disabled"
         )
     except WalletNotFoundError:
          return error_response(
             status_code=status.HTTP_404_NOT_FOUND,
-            error_msg="wallet not found"
+            error="wallet not found"
         )
     except DuplicateTransactionReferenceId:
          return error_response(
             status_code=status.HTTP_400_BAD_REQUEST,
-            error_msg="reference id already exists"
+            error="reference id already exists"
         )
     except Exception as e:
         logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
@@ -175,12 +171,12 @@ def get_wallet(request: Request, ):
     except WalletDisabledError:
         return error_response(
             status_code=status.HTTP_400_BAD_REQUEST,
-            error_msg="Wallet is disabled"
+            error="Wallet is disabled"
         )
     except WalletNotFoundError:
          return error_response(
             status_code=status.HTTP_404_NOT_FOUND,
-            error_msg="wallet not found"
+            error="wallet not found"
         )
     except Exception as e:
         logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
@@ -200,12 +196,12 @@ def get_wallet(request: Request, ):
     except WalletDisabledError:
         return error_response(
             status_code=status.HTTP_400_BAD_REQUEST,
-            error_msg="Wallet is disabled"
+            error="Wallet is disabled"
         )
     except WalletNotFoundError:
          return error_response(
             status_code=status.HTTP_404_NOT_FOUND,
-            error_msg="wallet not found"
+            error="wallet not found"
         )
     except Exception as e:
         logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
