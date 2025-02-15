@@ -37,7 +37,6 @@ def init_wallet(customer_xid: str|None = Form("")):
     except ValidationError as ve:
         return validation_error(ve)
     except Exception as e:
-        logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
         return internal_server_error_response(e)
     
 @router.post("/wallet", dependencies=[Depends(parse_user_from_token)])
@@ -60,7 +59,6 @@ def enable_wallet(request: Request):
             error="wallet not found"
         )
     except Exception as e:
-        logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
         return internal_server_error_response(e)
         
     
@@ -84,7 +82,6 @@ def disable_wallet(request: Request):
             error="wallet not found"
         )
     except Exception as e:
-        logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
         return internal_server_error_response(e)
         
 @private_router.post("/wallet/deposits", dependencies=[Depends(parse_user_from_token)])
@@ -122,7 +119,6 @@ def deposit(
             error="reference id already exists"
         )
     except Exception as e:
-        logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
         return internal_server_error_response(e)
         
 
@@ -159,7 +155,6 @@ def withdraw(
             error="reference id already exists"
         )
     except Exception as e:
-        logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
         return internal_server_error_response(e)
         
 @private_router.get("/wallet", dependencies=[Depends(parse_user_from_token)])
@@ -183,7 +178,6 @@ def get_wallet(request: Request, ):
             error="wallet not found"
         )
     except Exception as e:
-        logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
         return internal_server_error_response(e)
         
         
@@ -208,6 +202,5 @@ def get_wallet(request: Request, ):
             error="wallet not found"
         )
     except Exception as e:
-        logger.error(f'unexpected error: {e}\n{traceback.format_exc()}')
         return internal_server_error_response(e)
         
