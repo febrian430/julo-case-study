@@ -2,6 +2,7 @@ from models.wallet import Wallet
 from models.transaction import *
 from dataclasses import asdict, dataclass
 from common import time
+from typing import List
 
 @dataclass
 class EnabledWalletResponseData:
@@ -124,3 +125,45 @@ def convert_transaction_model_to_wallet_withdraw_response(model: Transaction | N
     
     resp_data = WalletWithdrawResponseData(str(model.id), customer_id, model.status, time.convert_timestamp_to_iso_format(model.created_at), model.amount, model.reference_id)
     return asdict(WalletWithdrawResponse(resp_data))
+
+
+@dataclass
+class WalletTransactionResponseData:
+    def __init__(self, id: str, status: str, transacted_at: str, type: str, amount: int, reference_id: str):
+        self.id = id
+        self.status = status
+        self.transacted_at = transacted_at
+        self.type = type
+        self.amount = amount
+        self.reference_id = reference_id
+
+    id: str
+    status: str
+    transacted_at: str
+    type: str
+    amount: int
+    reference_id: str
+
+@dataclass
+class WalletTransactionsResponse:
+    transactions: List[WalletTransactionResponseData]
+    
+    def __init__(self, wallet_transactions: List[WalletTransactionResponseData]):
+        self.transactions = wallet_transactions
+
+def convert_model_to_wallet_transactions_response(models: List[Transaction] | None) -> dict[str, any]:
+    if models is None:
+        return []
+    
+    wallet_transactions = [
+        WalletTransactionResponseData(
+            model.id, 
+            model.status, 
+            time.convert_timestamp_to_iso_format(model.created_at), 
+            model.type, 
+            float(model.amount), 
+            model.reference_id
+        ) for model in models or []
+    ]
+    
+    return asdict(WalletTransactionsResponse(wallet_transactions))

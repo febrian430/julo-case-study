@@ -86,3 +86,14 @@ class WalletService:
             raise WalletDisabledError
         
         return dtos.convert_model_to_enabled_wallet_response(wallet)
+    
+    def get_wallet_transactions(self, wallet_id: str) -> dtos.WalletTransactionsResponse:
+        wallet = self.repository.find_wallet_by_id(wallet_id)
+        if wallet is None:
+            raise WalletNotFoundError
+        elif wallet.disabled_at is not None:
+            raise WalletDisabledError
+        
+        transactions = self.repository.get_transactions_by_wallet_id(wallet_id)
+        
+        return dtos.convert_model_to_wallet_transactions_response(transactions)

@@ -1,9 +1,9 @@
 from models.wallet import Wallet
 from uuid import uuid4
 from datetime import datetime
-from common.exceptions import WalletEnabledError
 from models.transaction import Transaction, TransactionType, TransactionStatus
 from peewee import fn, Case
+from typing import List
 
 class WalletRepository:
     def create_wallet(self, customer_id: str) -> str:
@@ -52,3 +52,5 @@ class WalletRepository:
     def put_transaction(self, wallet_id: str, transaction_type: TransactionType, amount: int, status: TransactionStatus, reference_id: str) -> Transaction:
         return Transaction.create(id=uuid4(), wallet_id=wallet_id, reference_id=reference_id, type=transaction_type.value, amount=amount, status=status.value)
         
+    def get_transactions_by_wallet_id(self, wallet_id: str) -> List[Transaction]:
+        return Transaction.select().where(Transaction.wallet_id == wallet_id).order_by(Transaction.created_at.desc())
