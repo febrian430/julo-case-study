@@ -9,7 +9,7 @@ class Transaction(Base):
     reference_id = TextField(unique=True)
     wallet_id = ForeignKeyField(Wallet, to_field=Wallet.id)
     amount = DecimalField(max_digits=15, decimal_places=3)
-    created_at = TimestampField(default=datetime.datetime.now().timestamp())
+    created_at = TimestampField(default=datetime.datetime.now())
     status = TextField() # refer to TransactionStatus enum
     type = TextField()
 

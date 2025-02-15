@@ -50,7 +50,7 @@ class WalletRepository:
         return wallet
     
     def put_transaction(self, wallet_id: str, transaction_type: TransactionType, amount: int, status: TransactionStatus, reference_id: str) -> Transaction:
-        return Transaction.create(id=uuid4(), wallet_id=wallet_id, reference_id=reference_id, type=transaction_type.value, amount=amount, status=status.value)
+        return Transaction.create(id=uuid4(), wallet_id=wallet_id, reference_id=reference_id, type=transaction_type.value, amount=amount, status=status.value, created_at=datetime.now())
         
     def get_transactions_by_wallet_id(self, wallet_id: str) -> List[Transaction]:
         return Transaction.select().where(Transaction.wallet_id == wallet_id).order_by(Transaction.created_at.desc())
