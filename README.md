@@ -12,4 +12,13 @@
 # Without Docker
 
 - Adjust environment variables under `.env` especially related to DB related environment variables. Please run `CREATE DATABASE` in your DB server first based on the `POSTGRES_DB_NAME`
-- Run `uvicorn main:app --host 0.0.0.0 --port 8000`
+- setup project: 
+    - setup `venv`: 
+        - `python -m venv venv`
+        - `source venv/bin/activate` (could be diff depending on your OS)
+    - install dependencies: 
+        - `pip install -r requirements.txt`
+        
+    - `source .env`
+    
+- Run `uvicorn main:app --host localhost --port 8000`
