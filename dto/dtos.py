@@ -4,7 +4,7 @@ from dataclasses import asdict, dataclass
 from common import time
 
 @dataclass
-class EnableWalletResponseData:
+class EnabledWalletResponseData:
     def __init__(self, id: str, owned_by: str, status: str, enabled_at: str, balance: int):
         self.id = id
         self.owned_by = owned_by
@@ -20,16 +20,16 @@ class EnableWalletResponseData:
 
 @dataclass
 class EnableWalletResponse:
-    wallet: EnableWalletResponseData
+    wallet: EnabledWalletResponseData
     
-    def __init__(self, data: EnableWalletResponseData):
+    def __init__(self, data: EnabledWalletResponseData):
         self.wallet = data
     
-def convert_model_to_enable_wallet_response(model: Wallet | None) -> dict[str, any] | None:
+def convert_model_to_enabled_wallet_response(model: Wallet | None) -> dict[str, any] | None:
     if model is None:
         return None
     
-    wallet_data = EnableWalletResponseData(model.id, model.customer_id, "enabled" if model.enabled_at is not None else "disabled", time.convert_timestamp_to_iso_format(model.enabled_at), model.balance)
+    wallet_data = EnabledWalletResponseData(model.id, model.customer_id, "enabled" if model.enabled_at is not None else "disabled", time.convert_timestamp_to_iso_format(model.enabled_at), float(model.balance))
     return asdict(EnableWalletResponse(wallet_data))
 
 
@@ -59,7 +59,7 @@ def convert_model_to_disable_wallet_response(model: Wallet | None) -> dict[str, 
     if model is None:
         return None
     
-    wallet_data = DisableWalletResponseData(model.id, model.customer_id, "enabled" if model.enabled_at is not None else "disabled", time.convert_timestamp_to_iso_format(model.disabled_at), model.balance)
+    wallet_data = DisableWalletResponseData(model.id, model.customer_id, "enabled" if model.enabled_at is not None else "disabled", time.convert_timestamp_to_iso_format(model.disabled_at), float(model.balance))
     return asdict(DisableWalletResponse(wallet_data))
 
 

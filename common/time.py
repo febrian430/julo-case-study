@@ -3,7 +3,6 @@ from os import getenv
 from common.keys import EnvKey
 from datetime import datetime
 
-def convert_timestamp_to_iso_format(timestamp: int) -> str:
-    
+def convert_timestamp_to_iso_format(time: datetime) -> str:
     tz = pytz.timezone(getenv(EnvKey.ServerTimezone.value, "Asia/Jakarta"))
-    return datetime.fromtimestamp(timestamp, tz).isoformat()
+    return datetime.fromtimestamp(time.timestamp(), tz).isoformat()

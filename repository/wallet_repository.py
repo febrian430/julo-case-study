@@ -36,14 +36,14 @@ class WalletRepository:
         
 
     def enable_wallet(self, wallet: Wallet) -> Wallet:
-        now = datetime.now().timestamp()
+        now = datetime.now()
         wallet.enabled_at = now
         wallet.disabled_at = None
         wallet.save()
         return wallet
     
     def disable_wallet(self, wallet: Wallet) -> Wallet:
-        now = datetime.now().timestamp()
+        now = datetime.now()
         wallet.disabled_at = now
         wallet.enabled_at = None
         wallet.save()
