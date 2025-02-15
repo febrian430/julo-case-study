@@ -1,3 +1,6 @@
+# DB Design
+![](./blob/ERD.png)
+
 # How to install and run
 
 # Docker (easier)
