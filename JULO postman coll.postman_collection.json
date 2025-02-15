@@ -1,0 +1,255 @@
+{
+	"info": {
+		"_postman_id": "b7e20b49-d6d2-4fd7-a4c4-5ff034631fd3",
+		"name": "JULO postman coll",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9158172",
+		"_collection_link": "https://cloudy-astronaut-842766.postman.co/workspace/MY~511deba5-9c53-43bc-ab5f-4f7371cfcf74/collection/9158172-b7e20b49-d6d2-4fd7-a4c4-5ff034631fd3?action=share&source=collection_link&creator=9158172"
+	},
+	"item": [
+		{
+			"name": "Init Wallet",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "customer_xid",
+							"value": "aaaa11",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v1/init",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"init"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Enable Wallet",
+			"request": {
+				"auth": {
+					"type": "bearer"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6ImFhYWExMSIsIndhbGxldF9pZCI6IjgyNDVhMjVmLWZkNTAtNDk0NS05NmRlLTgxYjIxZmM3YzQ2YSIsImV4cCI6MTczOTYwNzI5N30.to176unU6h6a8I_dC5cDglyX6_-fvWucu4UpKDPgJBQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/v1/wallet",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"wallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Disable wallet",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6ImFhYWExMSIsIndhbGxldF9pZCI6IjgyNDVhMjVmLWZkNTAtNDk0NS05NmRlLTgxYjIxZmM3YzQ2YSIsImV4cCI6MTczOTYwNzI5N30.to176unU6h6a8I_dC5cDglyX6_-fvWucu4UpKDPgJBQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/v1/wallet",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"wallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deposit",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6ImFhYWExMSIsIndhbGxldF9pZCI6IjgyNDVhMjVmLWZkNTAtNDk0NS05NmRlLTgxYjIxZmM3YzQ2YSIsImV4cCI6MTczOTYwNzI5N30.to176unU6h6a8I_dC5cDglyX6_-fvWucu4UpKDPgJBQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "amount",
+							"value": "100000",
+							"type": "text"
+						},
+						{
+							"key": "reference_id",
+							"value": "50535246-dcb2-4929-8cc9-004ea06f52\n",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v1/wallet/deposits",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"wallet",
+						"deposits"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Withdraw",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6ImFhYWExMSIsIndhbGxldF9pZCI6IjgyNDVhMjVmLWZkNTAtNDk0NS05NmRlLTgxYjIxZmM3YzQ2YSIsImV4cCI6MTczOTYwNzI5N30.to176unU6h6a8I_dC5cDglyX6_-fvWucu4UpKDPgJBQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "reference_id",
+							"value": "50535246-dcb2-4929-s-004ea06f5241",
+							"type": "text"
+						},
+						{
+							"key": "amount",
+							"value": "60000",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v1/wallet/withdrawals",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"wallet",
+						"withdrawals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View wallet balance",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6ImFhYWExMSIsIndhbGxldF9pZCI6IjgyNDVhMjVmLWZkNTAtNDk0NS05NmRlLTgxYjIxZmM3YzQ2YSIsImV4cCI6MTczOTYwNzI5N30.to176unU6h6a8I_dC5cDglyX6_-fvWucu4UpKDPgJBQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/v1/wallet",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"wallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View transactions",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6ImFhYWExMSIsIndhbGxldF9pZCI6IjgyNDVhMjVmLWZkNTAtNDk0NS05NmRlLTgxYjIxZmM3YzQ2YSIsImV4cCI6MTczOTYwNzI5N30.to176unU6h6a8I_dC5cDglyX6_-fvWucu4UpKDPgJBQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/v1/wallet/transactions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"wallet",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
