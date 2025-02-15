@@ -12,8 +12,6 @@ app = FastAPI()
 app.include_router(wallet.router)
 app.include_router(wallet.private_router)
 
-
-
 @app.get("/ping")
 def ping():
     return {"ping": "pong"}

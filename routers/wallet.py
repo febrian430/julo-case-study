@@ -6,7 +6,7 @@ from service.auth_service import AuthService
 from logger import logger
 from middleware.auth import parse_user_from_token
 from common.exceptions import *
-from routers.validations import validate_init_wallet
+from routers.validations import validate_init_wallet, validate_transaction_request
 
 router = APIRouter(
     prefix="/api/v1"
@@ -94,15 +94,18 @@ def deposit(
         reference_id: str = Form("")
     ):
     
-    # TODO: add validation
+    
     
     try:
+        validate_transaction_request(amount, reference_id)
         resp = service.deposit(request.state.wallet_id, request.state.customer_id, amount, reference_id)
        
         return success_response(
             status_code=status.HTTP_200_OK,
             content=resp
         )
+    except ValidationError as ve:
+        return validation_error(ve)
     except WalletDisabledError:
         return error_response(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -130,15 +133,16 @@ def withdraw(
         reference_id: str = Form("")
     ):
     
-    # TODO: add validation
-    
     try:
+        validate_transaction_request(amount, reference_id)
         resp = service.withdraw(request.state.wallet_id, request.state.customer_id, amount, reference_id)
        
         return success_response(
             status_code=status.HTTP_200_OK,
             content= resp
         )
+    except ValidationError as ve:
+        return validation_error(ve)
     except WalletDisabledError:
         return error_response(
             status_code=status.HTTP_400_BAD_REQUEST,
