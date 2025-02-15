@@ -1,7 +1,9 @@
 import jwt
 from os import getenv
 from common.keys import EnvKey
-from datetime import datetime
+from datetime import datetime, timedelta
+from logger import logger
+import traceback
 
 class AuthJwtPayload:
     customer_id: str
@@ -15,10 +17,11 @@ class AuthService:
     algorithm: str = "HS256"
     def generate_jwt_token(self, customer_id: str, wallet_id: str) -> str:
         secret = getenv(EnvKey.JwtSecretKey.value)
+        expiryInMins = getenv(EnvKey.JwtExpiryInMinutes.value, 60)
         payload = {
             "customer_id": customer_id,
             "wallet_id": wallet_id,
-            "exp": datetime.now()
+            "exp": datetime.now() + timedelta(minutes=float(expiryInMins))
         }
         return jwt.encode(payload, secret, self.algorithm)
     
@@ -32,6 +35,7 @@ class AuthService:
 
             return AuthJwtPayload(customer_id, wallet_id)
         except Exception as e:
+            logger.error(f'failed to parse jwt token: {e}\n{traceback.format_exc()}')
             return None
         
 

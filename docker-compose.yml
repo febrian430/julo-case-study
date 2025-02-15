@@ -16,6 +16,7 @@ services:
       POSTGRES_DB_PASSWORD: password
       JWT_SECRET_KEY: 1234567$$890qwertyui%%op
       SERVER_TIMEZONE: Asia/Jakarta
+      JWT_EXPIRY_IN_MINS: 60
     volumes:
       - .:/app
 
